@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (max-width: 850px) {
+  .responsive {
+    width: 100%;
+  }
+  .icons{
+    font-size: 1.8rem;
+  }
+ 
+}
+
