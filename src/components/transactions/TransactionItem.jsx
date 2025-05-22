@@ -1,54 +1,38 @@
-// import { useGlobalState } from "../../context/GlobalState";
-
-// export function TransactionItem({transaction}) {
-
-//     const {deleteTransaction} = useGlobalState()
-   
-
-
-//     return (
-//         <li className="bg-zinc-600 text-white px-3 py-1 rounded-lg mb-2 w-full flex justify-between items-center">
-//             <p className="text-sm">{transaction.description}</p>
-//            <div>
-//              <span>${transaction.amount}</span> 
-//             <button onClick={() => {
-//                 deleteTransaction(transaction.id);
-//             }}>🗑️</button>
-//            </div>
-//         </li>
-//     )
-// }
-
 
 
 import { useGlobalState } from "../../context/GlobalState";
-import {BiTrash} from 'react-icons/bi'
+import { BiTrash } from 'react-icons/bi'
 
 export function TransactionItem({ transaction: { id, description, amount } }) {
   const { deleteTransaction } = useGlobalState();
-  const sign = amount < 0 ? "-" : "+";
+  const isIncome = amount > 0;
+  const sign = isIncome ? "+" : "-";
+  const absAmount = Math.abs(amount).toFixed(2);
 
   return (
     <li
       key={id}
-      className={
-        `bg-zinc-600 text-white px-3 py-1 rounded-lg mb-2 w-full flex justify-between items-center` +
-        ` ${amount < 0 ? "bg-red-700" : "bg-green-700"}`
-      }
+      className={`
+        flex justify-between items-center p-3 mb-2 rounded-lg
+        bg-zinc-700 hover:bg-zinc-600 transition-colors
+      `}
     >
-      {description}
-      <div>
-        <span>
-          {sign}${Math.abs(amount)}
+      <span className="font-medium truncate max-w-[180px]">
+        {description}
+      </span>
+      
+      <div className="flex items-center">
+        <span className={`font-bold ${isIncome ? "text-green-400" : "text-red-400"}`}>
+          {sign}${absAmount}
         </span>
         <button
           onClick={() => deleteTransaction(id)}
-          className="font-bold text-white rounded-lg ml-2"
+          className="ml-3 p-1 rounded-full hover:bg-white/10 transition-colors"
+          aria-label="Eliminar transacción"
         >
-          <BiTrash />
+          <BiTrash className={`${isIncome ? "text-green-200/80 hover:text-green-200" : "text-red-200/80 hover:text-red-200"}`} />
         </button>
       </div>
     </li>
   );
 }
-

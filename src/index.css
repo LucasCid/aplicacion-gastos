@@ -2,13 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-@media (max-width: 850px) {
-  .responsive {
-    width: 100%;
-  }
-  .icons{
-    font-size: 1.8rem;
-  }
- 
+
+
+.custom-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #4f46e5 #1e293b;
+}
+
+.custom-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+    background: #3861a3;
+    border-radius: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+    background-color: #3c35c5;
+    border-radius: 4px;
 }
 
