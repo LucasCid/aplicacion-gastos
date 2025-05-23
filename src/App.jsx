@@ -1,5 +1,7 @@
+
+
 // import { GlobalProvider } from "./context/GlobalState";
-// import { useState, useEffect } from "react"; // Importamos los hooks necesarios
+// import { useState, useEffect } from "react";
 // import Header from "./components/Header";
 // import Balance from "./components/Balance";
 // import TransactionForm from "./components/transactions/TransactionForm";
@@ -8,24 +10,48 @@
 // import ExpenseChart from "./components/ExpenseChart";
 
 // function App() {
-//   const [showTooltip, setShowTooltip] = useState(true);
+//   const [showTooltip, setShowTooltip] = useState(false);
 
 //   useEffect(() => {
-//     // Configuramos un temporizador para ocultar el tooltip después de 3 segundos
-//     const timer = setTimeout(() => {
-//       setShowTooltip(false);
-//     }, 4000);
+//     // Verificamos el ancho de la pantalla al montar el componente
+//     const checkScreenSize = () => {
+//       if (window.innerWidth <= 500) {
+//         setShowTooltip(true);
+        
+//         // Configuramos el temporizador solo si es móvil
+//         const timer = setTimeout(() => {
+//           setShowTooltip(false);
+//         }, 4000);
 
-//     // Limpiamos el temporizador si el componente se desmonta
-//     return () => clearTimeout(timer);
-//   }, []); // El array vacío asegura que esto solo se ejecute una vez al montar
+//         return () => clearTimeout(timer);
+//       }
+//     };
+
+//     checkScreenSize();
+
+//     // Opcional: añadir listener para cambios de tamaño si quieres que reaparezca al redimensionar
+//     const handleResize = () => {
+//       if (window.innerWidth <= 500 && !showTooltip) {
+//         setShowTooltip(true);
+//         const timer = setTimeout(() => {
+//           setShowTooltip(false);
+//         }, 4000);
+//         return () => clearTimeout(timer);
+//       } else if (window.innerWidth > 500) {
+//         setShowTooltip(false);
+//       }
+//     };
+
+//     window.addEventListener('resize', handleResize);
+//     return () => window.removeEventListener('resize', handleResize);
+//   }, []);
 
 //   return (
 //     <GlobalProvider>
 //       <div className="bg-zinc-900 text-white min-h-screen py-8 px-4 flex justify-center items-start md:items-center">
-//         {/* Tooltip/Burbuja - Ahora controlado por estado */}
+//         {/* Tooltip solo visible en móviles */}
 //         {showTooltip && (
-//           <div className="fixed top-4 right-4 animate-fade-in">
+//           <div className="fixed top-4 right-4 animate-fade-in sm:hidden">
 //             <div className="bg-blue-500 text-white p-3 rounded-lg shadow-lg flex items-center">
 //               <svg 
 //                 xmlns="http://www.w3.org/2000/svg" 
@@ -49,6 +75,7 @@
 //           </div>
 //         )}
 
+//         {/* Resto de tu código... */}
 //         <div className="container mx-auto w-full px-4 md:w-3/6 lg:w-3/5">
 //           <div className="bg-zinc-800 p-4 md:p-8 rounded-lg flex flex-col md:flex-row gap-6">
 //             <div className="md:w-1/2">
@@ -83,43 +110,27 @@ function App() {
   const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
-    // Verificamos el ancho de la pantalla al montar el componente
-    const checkScreenSize = () => {
-      if (window.innerWidth <= 500) {
-        setShowTooltip(true);
-        
-        // Configuramos el temporizador solo si es móvil
-        const timer = setTimeout(() => {
-          setShowTooltip(false);
-        }, 4000);
-
-        return () => clearTimeout(timer);
-      }
-    };
-
-    checkScreenSize();
-
-    // Opcional: añadir listener para cambios de tamaño si quieres que reaparezca al redimensionar
-    const handleResize = () => {
-      if (window.innerWidth <= 500 && !showTooltip) {
-        setShowTooltip(true);
-        const timer = setTimeout(() => {
-          setShowTooltip(false);
-        }, 4000);
-        return () => clearTimeout(timer);
-      } else if (window.innerWidth > 500) {
+    // Verificamos solo al inicio si es móvil
+    const isMobile = window.innerWidth <= 500;
+    
+    if (isMobile) {
+      setShowTooltip(true);
+      
+      // Ocultamos después de 4 segundos
+      const timer = setTimeout(() => {
         setShowTooltip(false);
-      }
-    };
+      }, 4000);
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+      return () => clearTimeout(timer);
+    }
+
+    // Eliminamos el event listener de resize para evitar reactivaciones
+  }, []); // <- Array vacío asegura que solo se ejecute una vez
 
   return (
     <GlobalProvider>
       <div className="bg-zinc-900 text-white min-h-screen py-8 px-4 flex justify-center items-start md:items-center">
-        {/* Tooltip solo visible en móviles */}
+        {/* Tooltip solo visible en móviles (con sm:hidden como respaldo) */}
         {showTooltip && (
           <div className="fixed top-4 right-4 animate-fade-in sm:hidden">
             <div className="bg-blue-500 text-white p-3 rounded-lg shadow-lg flex items-center">
@@ -145,7 +156,7 @@ function App() {
           </div>
         )}
 
-        {/* Resto de tu código... */}
+        {/* Contenido principal */}
         <div className="container mx-auto w-full px-4 md:w-3/6 lg:w-3/5">
           <div className="bg-zinc-800 p-4 md:p-8 rounded-lg flex flex-col md:flex-row gap-6">
             <div className="md:w-1/2">
@@ -162,7 +173,7 @@ function App() {
         </div>
       </div>
     </GlobalProvider>
-  )
+  );
 }
 
 export default App;
